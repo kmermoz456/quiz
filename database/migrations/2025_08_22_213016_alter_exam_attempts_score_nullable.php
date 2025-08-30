@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::table('exam_attempts', function (Blueprint $table) {
             // Nécessite doctrine/dbal pour change()
-            $table->unsignedTinyInteger('score')->nullable()->change();
+            $table->integer('score')->nullable()->change();
         });
     }
 

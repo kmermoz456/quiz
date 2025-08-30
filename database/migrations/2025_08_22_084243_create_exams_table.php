@@ -13,15 +13,13 @@ return new class extends Migration
     {
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
-$table->foreignId('subject_id')->constrained()->cascadeOnDelete();
-$table->string('title');
-$table->unsignedInteger('duration_minutes')->default(30);
-$table->timestamp('starts_at')->nullable();
-$table->timestamp('ends_at')->nullable();
-$table->boolean('is_published')->default(false);
-$table->timestamps();
-
-
+            $table->foreignId('subject_id')->constrained()->cascadeOnDelete();
+            $table->string('title');
+            $table->integer('duration_minutes')->default(30);
+            $table->timestamp('starts_at')->nullable();
+            $table->timestamp('ends_at')->nullable();
+            $table->boolean('is_published')->default(false);
+            $table->timestamps();
         });
     }
 

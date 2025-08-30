@@ -19,8 +19,8 @@ return new class extends Migration
 public function down(): void
 {
     Schema::table('exam_attempts', function (Blueprint $t) {
-        $t->unsignedInteger('score')->default(0)->change();
-        $t->unsignedInteger('max_score')->default(0)->change();
+        $t->integer('score')->default(0)->change();
+        $t->integer('max_score')->default(0)->change();
     });
 }
 

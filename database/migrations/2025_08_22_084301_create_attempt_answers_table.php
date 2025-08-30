@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('exam_attempt_id')->constrained()->cascadeOnDelete();
             $table->foreignId('question_id')->constrained()->cascadeOnDelete();
             $table->json('choice_ids');
-            $table->unsignedInteger('awarded_points')->default(0);
+            $table->integer('awarded_points')->default(0);
             $table->timestamps();
         });
     }

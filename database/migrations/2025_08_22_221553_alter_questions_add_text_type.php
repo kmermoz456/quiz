@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::table('questions', function (Blueprint $table) {
             // étend l’ENUM pour inclure 'text'
-            $table->enum('type', ['single','multiple','true_false','text'])
+            $table->string('type', ['single','multiple','true_false','text'])
                   ->default('single')
                   ->change();
         });

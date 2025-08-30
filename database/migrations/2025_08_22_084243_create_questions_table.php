@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('subject_id')->constrained()->cascadeOnDelete();
             $table->text('statement');
-            $table->enum('type', ['single', 'multiple', 'true_false']);
-            $table->unsignedInteger('points')->default(1);
-            $table->unsignedInteger('position')->default(0);
+            $table->string('type', ['single', 'multiple', 'true_false']);
+            $table->integer('points')->default(1);
+            $table->integer('position')->default(0);
             $table->timestamps();
         });
     }

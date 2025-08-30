@@ -12,7 +12,7 @@ return new class extends Migration {
         Schema::table('attempt_answers', function (Blueprint $table) {
             // selon votre schéma, adaptez les colonnes existantes
             if (Schema::hasColumn('attempt_answers', 'choice_id')) {
-                $table->unsignedBigInteger('choice_id')->nullable()->change();
+                $table->integer('choice_id')->nullable()->change();
             }
             if (Schema::hasColumn('attempt_answers', 'choice_ids')) {
                 // Option A : nullable

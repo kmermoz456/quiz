@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::table('exam_question', function (Blueprint $table) {
             // ajoute la colonne si elle n’existe pas
             if (!Schema::hasColumn('exam_question', 'position')) {
-                $table->unsignedInteger('position')->default(0)->after('question_id');
+                $table->integer('position')->default(0)->after('question_id');
             }
         });
     }
