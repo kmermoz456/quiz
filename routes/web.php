@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\ExamController;
 use App\Http\Controllers\Admin\ExamBuilderController;
 use App\Http\Controllers\Admin\AdminResultsController;
 use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,7 +80,8 @@ Route::get('/dashboard', [StudentDashboardController::class, 'index'])
 // Admin
 Route::prefix('admin')->name('admin.')->middleware(['auth','role:admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::patch('/users/{user}/role', [UserController::class, 'updateRole'])->name('users.updateRole');
     // CRUD admin
     Route::resource('units', UnitController::class);
     Route::resource('subjects', SubjectController::class);

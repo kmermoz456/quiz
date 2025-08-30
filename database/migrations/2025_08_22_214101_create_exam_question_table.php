@@ -11,13 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-           Schema::create('exam_question', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('exam_id')->constrained()->cascadeOnDelete();
-    $table->foreignId('question_id')->constrained()->cascadeOnDelete();
-    $table->timestamps();
-});
+        Schema::create('exam_question', function (Blueprint $table) {
+            $table->id();
 
+            $table->foreignId('exam_id')
+                ->constrained('exams')
+                ->cascadeOnDelete();
+
+            $table->foreignId('question_id')
+                ->constrained('questions')
+                ->cascadeOnDelete();
+
+            // pas de "after()" en PostgreSQL
+            $table->integer('position')->default(0);
+
+            $table->timestamps();
+
+            // facultatif : éviter qu’une même question soit assignée deux fois au même exam
+            $table->unique(['exam_id', 'question_id']);
+        });
     }
 
     /**

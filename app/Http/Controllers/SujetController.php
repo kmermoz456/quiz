@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Subject;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SujetController extends Controller
 {
@@ -122,27 +123,38 @@ $questions = $subject->questions()
      * Implémentation commune : filtre par niveau + recherche + pagination.
      * Retourne la vue 'subjects.index' avec $level, $subjects, $q.
      */
-    private function indexByLevel(string $level, Request $request)
-    {
-        $q = trim((string) $request->query('q', ''));
+ private function indexByLevel(string $level, Request $request)
+{
+    $q = trim((string) $request->query('q', ''));
 
-        $subjects = Subject::with(['unit'])
-            ->withCount('exams')
-            ->where('level', $level)
-            ->when($q !== '', function ($query) use ($q) {
-                $query->where(function ($qq) use ($q) {
-                    $qq->where('title', 'like', "%{$q}%")
-                       ->orWhere('description', 'like', "%{$q}%");
-                });
-            })
-            ->orderBy('title')
-            ->paginate(12)
-            ->withQueryString();
+    $subjects = Subject::query()
+        ->with('unit')
+        // nb d’examens distincts liés au sujet via ses questions
+        ->withCount([
+            'questions as exams_count' => function ($query) {
+                $query->join('exam_question', 'exam_question.question_id', '=', 'questions.id')
+                      ->select(DB::raw('count(distinct exam_question.exam_id)'));
+            },
+            // utile si tu veux aussi afficher le nombre de questions
+            'questions',
+        ])
+        ->where('level', $level)
+        ->when($q !== '', function ($query) use ($q) {
+            $query->where(function ($qq) use ($q) {
+                $qq->where('title', 'like', "%{$q}%")
+                   ->orWhere('description', 'like', "%{$q}%");
+            });
+        })
+        ->orderBy('title')
+        ->paginate(12)
+        ->withQueryString();
 
-        return view('subjects.index', [
-            'level'    => $level,
-            'subjects' => $subjects,
-            'q'        => $q,
-        ]);
-    }
+    return view('subjects.index', [
+        'level'    => $level,
+        'subjects' => $subjects,
+        'q'        => $q,
+    ]);
+}
+  
+
 }

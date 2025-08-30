@@ -26,6 +26,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    protected static function booted()
+{
+    static::creating(function ($user) {
+        if (User::count() === 0) {
+            $user->role = 'admin';
+        }
+    });
+}
 
     public function isAdmin(): bool
     {
