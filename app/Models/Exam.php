@@ -32,4 +32,22 @@ class Exam extends Model
                     ->withTimestamps()
                     ->orderBy('exam_question.position');
     }
+
+    /**
+ * Un examen est “pour ce niveau” si :
+ *  - il ne contient AUCUNE question d’un autre niveau
+ *  - et contient AU MOINS une question du niveau demandé
+ */
+public function scopeForLevel($query, string $level)
+{
+    return $query
+        // aucune question d’un niveau différent
+        ->whereDoesntHave('questions.subject', function ($qq) use ($level) {
+            $qq->where('level', '!=', $level);
+        })
+        // au moins une question de ce niveau
+        ->whereHas('questions.subject', function ($qq) use ($level) {
+            $qq->where('level', $level);
+        });
+}
 }

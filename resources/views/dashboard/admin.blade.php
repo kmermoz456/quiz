@@ -88,9 +88,11 @@
 
 {{-- Charts init (couleurs adaptées au thème clair) --}}
 <script>
+
+  
 document.addEventListener('DOMContentLoaded', () => {
   // Tentatives / mois
-  const monthly = @json($seriesMonthly->map(fn($r)=>['m'=>$r->m,'c'=>$r->c]));
+   const monthly = @json($seriesMonthly);   // pas de map côté PHP ici
   const labels  = monthly.map(r => r.m);
   const data    = monthly.map(r => r.c);
 

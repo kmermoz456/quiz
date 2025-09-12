@@ -26,15 +26,18 @@
             Pratiquez via des quiz ciblés et des examens en ligne pour booster vos résultats en Licence 1 & 2.
           </p>
           <div class="mt-6 flex flex-wrap gap-3">
-            <a href="{{ route('register') }}" class="px-4 py-2 rounded-lg bg-amber-400 text-slate-900 font-medium hover:bg-amber-300">
+          @guest 
+          <a href="{{ route('register') }}" class="px-4 py-2 rounded-lg bg-amber-400 text-slate-900 font-medium hover:bg-amber-300">
               Créer mon compte
             </a>
+            @endguest
             <a href="{{ route('student.exams.index') }}" class="px-4 py-2 rounded-lg bg-white/10 border border-white/30 text-white hover:bg-white/20">
               Voir les examens
             </a>
           </div>
         </div>
 
+        @guest
         {{-- Carte à droite : passe sous le texte sur mobile --}}
         <div class="lg:justify-self-end">
           <div class="rounded-xl bg-white/90 backdrop-blur border border-white/30 shadow-xl p-6 max-w-md mx-auto">
@@ -47,6 +50,7 @@
             <a href="{{ route('register') }}" class="mt-4 inline-flex px-3 py-2 rounded-lg bg-green-600 text-white text-sm hover:bg-green-500">Je m’inscris</a>
           </div>
         </div>
+        @endguest
       </div>
     </div>
   </section>
@@ -101,8 +105,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center">
       <h3 class="text-xl sm:text-2xl font-semibold">Prêt(e) à vous entraîner ?</h3>
       <div class="mt-4 flex flex-col sm:flex-row gap-3 justify-center">
-        <a href="{{ route('student.exams.index') }}" class="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-500">Lancer un quiz</a>
-        <a href="{{ route('register') }}" class="px-4 py-2 rounded-lg border border-slate-200 hover:bg-white">Créer un compte</a>
+        <a href="{{ route('subjects.l1')  }}" class="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-500">Lancer un quiz</a>
+       @guest <a href="{{ route('register') }}" class="px-4 py-2 rounded-lg border border-slate-200 hover:bg-white">Créer un compte</a> @endguest
       </div>
     </div>
   </section>

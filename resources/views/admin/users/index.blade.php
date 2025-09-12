@@ -26,6 +26,8 @@
           <th class="px-4 py-2">Nom</th>
           <th class="px-4 py-2">Email</th>
           <th class="px-4 py-2">Rôle</th>
+          <th>Abonnement</th>
+          <th></th>
           <th class="px-4 py-2">Action</th>
         </tr>
       </thead>
@@ -34,6 +36,23 @@
           <tr class="border-t">
             <td class="px-4 py-2">{{ $u->name }}</td>
             <td class="px-4 py-2 text-slate-600">{{ $u->email }}</td>
+              <td>
+            @if($u->subscription_active)
+              <span class="inline-flex items-center rounded-full bg-emerald-100 text-emerald-700 px-2.5 py-1 text-xs font-medium">Actif</span>
+            @else
+              <span class="inline-flex items-center rounded-full bg-rose-100 text-rose-700 px-2.5 py-1 text-xs font-medium">Inactif</span>
+            @endif
+          </td>
+          <td class="text-right">
+            @if($u->id !== 1)
+            <form method="POST" action="{{ route('admin.users.subscription.toggle',$u) }}">
+              @csrf @method('PATCH')
+              <button class="px-3 py-1 rounded-lg border hover:bg-slate-50">
+                {{ $u->subscription_active ? 'Désactiver' : 'Activer' }}
+              </button>
+            </form>
+            @endif
+          </td>
             <td class="px-4 py-2">
               <span class="inline-flex rounded-full px-2 py-0.5 text-xs
                 {{ $u->role==='admin' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-700' }}">
@@ -69,3 +88,5 @@
 
   <div class="mt-4">{{ $users->links() }}</div>
 @endsection
+
+

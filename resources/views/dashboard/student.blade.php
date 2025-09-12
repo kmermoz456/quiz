@@ -23,7 +23,8 @@
     </div>
     <div class="rounded-2xl p-5 bg-gradient-to-br from-purple-600 to-purple-500 text-white shadow">
       <div class="text-sm">Bonjour</div>
-      <div class="text-2xl font-bold">{{ $user->name }}</div>
+      <div class="text-2xl font-bold">{{ $user->name }} / {{ $user->level }}</div>
+      
     </div>
   </div>
 

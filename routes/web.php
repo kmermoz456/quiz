@@ -52,15 +52,15 @@ Route::middleware('auth')->group(function () {
 |--------------------------------------------------------------------------
 | ⚠️ UNE SEULE définition pour /subjects/{subject} -> PracticeController
 */
-Route::get('/subjects/{subject}', [PracticeController::class, 'show'])->name('subjects.practice');
-Route::post('/subjects/{subject}/submit', [PracticeController::class, 'submit'])->name('subjects.practice.submit');
+Route::get('/subjects/{subject}', [PracticeController::class, 'show'])->name('subjects.practice')->middleware(['auth','role:student','subscribed']);
+Route::post('/subjects/{subject}/submit', [PracticeController::class, 'submit'])->name('subjects.practice.submit')->middleware(['auth','role:student','subscribed']);
 
 /*
 |--------------------------------------------------------------------------
 | EXAMENS (chronométrés, pas de score immédiat étudiant)
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','role:student','subscribed'])->group(function () {
     Route::get('/exams',                 [ExamAttemptController::class, 'index'])->name('student.exams.index');
     Route::get('/exams/{exam}',          [ExamAttemptController::class, 'start'])->name('student.exams.start');
     Route::post('/exams/{exam}/submit',  [ExamAttemptController::class, 'submit'])->name('student.exams.submit');
@@ -99,6 +99,14 @@ Route::get('/users', [UserController::class, 'index'])->name('users.index');
     // Export d’un examen
     Route::get('exports/exam/{exam}/{format}', [ExamController::class, 'export'])->name('exams.export');
 });
+// routes/web.php (espace admin)
+Route::prefix('admin')->name('admin.')->middleware(['auth','role:admin'])->group(function () {
+    Route::patch('/users/{user}/subscription', [UserController::class, 'toggleSubscription'])
+        ->name('users.subscription.toggle');
+    Route::get('/users', [UserController::class, 'index'])
+        ->name('users.index');
+});
+
 
 /*
 |--------------------------------------------------------------------------

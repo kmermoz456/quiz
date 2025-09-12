@@ -191,10 +191,10 @@ class ExamAttemptController extends Controller
     /** Liste des examens disponibles */
     public function index(Request $request)
 {
-    $now = now();
+    $user = Auth::user();
+    $now  = now();
 
     $exams = Exam::query()
-        ->withCount('questions')
         ->where('is_published', true)
         ->where(function ($q) use ($now) {
             $q->whereNull('starts_at')->orWhere('starts_at', '<=', $now);
@@ -202,8 +202,7 @@ class ExamAttemptController extends Controller
         ->where(function ($q) use ($now) {
             $q->whereNull('ends_at')->orWhere('ends_at', '>=', $now);
         })
-        // d'abord ceux déjà ouverts, puis les autres, puis les plus récents
-        ->orderByRaw('CASE WHEN starts_at IS NULL OR starts_at <= ? THEN 0 ELSE 1 END', [$now])
+        ->forLevel($user->level)          // 🔒 filtrage strict par niveau
         ->latest()
         ->paginate(12);
 

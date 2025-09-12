@@ -11,22 +11,19 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $q = trim((string) $request->query('q', ''));
-
+         $q = trim((string) $request->query('q',''));
         $users = User::query()
-            ->when($q !== '', function ($query) use ($q) {
-                $query->where(function ($qq) use ($q) {
-                    $qq->where('name', 'like', "%{$q}%")
-                       ->orWhere('email', 'like', "%{$q}%");
-                });
-            })
+            ->when($q !== '', fn($qr) => $qr
+                ->where('name','like',"%{$q}%")
+                ->orWhere('email','like',"%{$q}%"))
             ->orderBy('name')
             ->paginate(20)
             ->withQueryString();
 
-        $adminsCount = User::where('role', 'admin')->count();
+              $adminsCount = User::where('role', 'admin')->count();
 
         return view('admin.users.index', compact('users', 'q', 'adminsCount'));
+
     }
 
     public function updateRole(Request $request, User $user)
@@ -51,5 +48,21 @@ class UserController extends Controller
         $user->update(['role' => $data['role']]);
 
         return back()->with('ok', "Rôle de {$user->name} mis à jour en « {$data['role']} ».");
+    }
+
+
+      public function toggleSubscription(User $user)
+    {
+        // On ne change pas l’admin principal par erreur
+        if ($user->id === 1) {
+            return back()->with('error','Impossible de modifier l’abonnement de l’administrateur principal.');
+        }
+
+        $user->subscription_active = !$user->subscription_active;
+        // (Optionnel) Tu peux aussi définir une date de fin si tu désactives :
+        // $user->subscription_ends_at = $user->subscription_active ? null : now();
+        $user->save();
+
+        return back()->with('ok', "Abonnement de {$user->name} " . ($user->subscription_active ? 'activé' : 'désactivé') . '.');
     }
 }

@@ -109,7 +109,9 @@ class ExamController extends Controller
             $exam->questions()->sync($payload); // ou ->sync($data['question_ids'] ?? [])
         });
 
-        return back()->with('ok', 'Examen mis à jour');
+        return redirect()->route('admin.exams.index')->with('ok', 'Examen mis à jour');
+
+       
     }
 
     public function destroy(Exam $exam)
